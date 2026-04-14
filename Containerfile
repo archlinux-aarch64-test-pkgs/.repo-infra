@@ -1,5 +1,5 @@
 # Stage 1: Download and extract aarch64 rootfs from Arch Linux Ports (drzee.net)
-FROM arm64v8/ubuntu:24.04 AS fetcher
+FROM docker.io/arm64v8/ubuntu:24.04 AS fetcher
 
 ARG ROOTFS_DATE=2026.04.01
 ARG ROOTFS_URL=https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64/archlinux-bootstrap-${ROOTFS_DATE}-aarch64.tar.zst

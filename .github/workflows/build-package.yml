@@ -1,0 +1,100 @@
+name: Build Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package name (pkg-xxx or just xxx)'
+        required: true
+        type: string
+      runner:
+        description: 'Runner to use'
+        default: 'ubuntu-24.04-arm'
+        type: choice
+        options:
+          - ubuntu-24.04-arm
+          - self-hosted
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+      runner:
+        required: false
+        type: string
+        default: 'ubuntu-24.04-arm'
+
+env:
+  ORG: archlinux-aarch64-test-pkgs
+  REPO_NAME: aarch64-addons
+  BUILD_IMAGE: ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest
+
+jobs:
+  build:
+    runs-on: ${{ inputs.runner }}
+    container: ${{ inputs.runner != 'self-hosted' && 'ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest' || '' }}
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout .repo-infra
+        uses: actions/checkout@v4
+
+      - name: Determine package repo
+        id: pkg
+        run: |
+          PKG="${{ inputs.package }}"
+          [[ "$PKG" == pkg-* ]] || PKG="pkg-$PKG"
+          echo "repo=$PKG" >> "$GITHUB_OUTPUT"
+          echo "name=${PKG#pkg-}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout PKGBUILD repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.ORG }}/${{ steps.pkg.outputs.repo }}
+          path: pkgbuild
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d | \
+            gpg --batch --import
+
+      - name: Build package
+        run: |
+          cd pkgbuild
+          bash ../scripts/build.sh
+
+      - name: Sign package
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          cd pkgbuild
+          bash ../scripts/sign-package.sh
+
+      - name: Extract package version
+        id: ver
+        run: |
+          cd pkgbuild
+          source PKGBUILD
+          echo "pkgver=$pkgver" >> "$GITHUB_OUTPUT"
+          echo "pkgrel=$pkgrel" >> "$GITHUB_OUTPUT"
+          echo "tag=v${pkgver}-${pkgrel}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to package repo Release
+        uses: softprops/action-gh-release@v2
+        with:
+          repository: ${{ env.ORG }}/${{ steps.pkg.outputs.repo }}
+          tag_name: ${{ steps.ver.outputs.tag }}
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+          files: |
+            pkgbuild/*.pkg.tar.zst
+            pkgbuild/*.pkg.tar.zst.sig
+
+      - name: Trigger repo database update
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+          repository: ${{ env.ORG }}/.repo-db
+          event-type: package-updated
+          client-payload: '{"package": "${{ steps.pkg.outputs.repo }}", "version": "${{ steps.ver.outputs.tag }}"}'

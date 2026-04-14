@@ -1,0 +1,47 @@
+name: Build All Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'Only build packages matching this name (leave empty for all)'
+        required: false
+        type: string
+
+env:
+  ORG: archlinux-aarch64-test-pkgs
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.packages }}
+    steps:
+      - name: Checkout .repo-infra
+        uses: actions/checkout@v4
+
+      - name: Build matrix
+        id: matrix
+        run: |
+          FILTER="${{ inputs.filter }}"
+          if [[ -n "$FILTER" ]]; then
+            PACKAGES=$(jq -c --arg f "$FILTER" \
+              '[.packages[] | select(.name | contains($f))]' config/packages.json)
+          else
+            PACKAGES=$(jq -c '.packages' config/packages.json)
+          fi
+          echo "packages=$PACKAGES" >> "$GITHUB_OUTPUT"
+          echo "::notice::Building $(echo "$PACKAGES" | jq 'length') package(s)"
+
+  build:
+    needs: prepare
+    if: ${{ fromJson(needs.prepare.outputs.matrix)[0] != null }}
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    uses: ./.github/workflows/build-package.yml
+    with:
+      package: ${{ matrix.package.repo }}
+      runner: ${{ matrix.package.runner || 'ubuntu-24.04-arm' }}
+    secrets: inherit

@@ -5,7 +5,7 @@ ARG ROOTFS_DATE=2026.04.01
 ARG ROOTFS_URL=https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64/archlinux-bootstrap-${ROOTFS_DATE}-aarch64.tar.zst
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl zstd && \
+    apt-get install -y --no-install-recommends curl zstd ca-certificates && \
     curl -L -o /tmp/rootfs.tar.zst "$ROOTFS_URL" && \
     mkdir /rootfs && \
     tar --zstd -xf /tmp/rootfs.tar.zst -C /rootfs && \

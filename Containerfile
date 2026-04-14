@@ -1,20 +1,26 @@
-# Stage 1: Download and extract aarch64 rootfs from Arch Linux Ports (drzee.net)
-FROM docker.io/arm64v8/ubuntu:24.04 AS fetcher
+# Stage 1: Extract pre-downloaded aarch64 rootfs
+#
+# Usage:
+#   1. Download rootfs to build context:
+#      curl -L -o rootfs.tar.zst \
+#        "https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64/archlinux-bootstrap-<DATE>-aarch64.tar.zst"
+#   2. Build:
+#      podman build -f Containerfile -t ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest .
 
-ARG ROOTFS_DATE=2026.04.01
-ARG ROOTFS_URL=https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64/archlinux-bootstrap-${ROOTFS_DATE}-aarch64.tar.zst
+FROM docker.io/arm64v8/ubuntu:24.04 AS extractor
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl zstd ca-certificates && \
-    curl -L -o /tmp/rootfs.tar.zst "$ROOTFS_URL" && \
-    mkdir /rootfs && \
-    tar --zstd -xf /tmp/rootfs.tar.zst -C /rootfs && \
-    rm /tmp/rootfs.tar.zst && \
+    apt-get install -y --no-install-recommends zstd && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY rootfs.tar.zst /tmp/rootfs.tar.zst
+RUN mkdir /rootfs && \
+    tar --zstd -xf /tmp/rootfs.tar.zst -C /rootfs && \
+    rm /tmp/rootfs.tar.zst
 
 # Stage 2: Build the final image from extracted root.aarch64/
 FROM scratch
-COPY --from=fetcher /rootfs/root.aarch64/ /
+COPY --from=extractor /rootfs/root.aarch64/ /
 
 COPY config/pacman.conf /etc/pacman.conf
 COPY config/makepkg.conf /etc/makepkg.conf

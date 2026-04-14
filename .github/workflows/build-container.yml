@@ -9,11 +9,12 @@ on:
         description: 'rootfs date (YYYY.MM.DD), leave empty to auto-detect'
         required: false
         type: string
-  push:
-    paths:
-      - 'Containerfile'
-      - 'config/pacman.conf'
-      - 'config/makepkg.conf'
+  # Uncomment after self-hosted runner is configured:
+  # push:
+  #   paths:
+  #     - 'Containerfile'
+  #     - 'config/pacman.conf'
+  #     - 'config/makepkg.conf'
 
 env:
   REGISTRY: ghcr.io

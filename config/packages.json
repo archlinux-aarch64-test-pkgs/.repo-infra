@@ -62,6 +62,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qcom-qairt",
+      "repo": "pkg-qcom-qairt",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

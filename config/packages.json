@@ -34,6 +34,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qcom-fastcv-binaries",
+      "repo": "pkg-qcom-fastcv-binaries",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

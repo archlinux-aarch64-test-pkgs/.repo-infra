@@ -1,9 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_CONF="$SCRIPT_DIR/../config/pacman.conf"
-MAKEPKG_CONF="$SCRIPT_DIR/../config/makepkg.conf"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_CONF="$(cd "$SCRIPT_DIR/../config" && pwd)/pacman.conf"
+MAKEPKG_CONF="$(cd "$SCRIPT_DIR/../config" && pwd)/makepkg.conf"
+
+echo "==> SCRIPT_DIR=$SCRIPT_DIR"
+echo "==> REPO_CONF=$REPO_CONF"
+echo "==> MAKEPKG_CONF=$MAKEPKG_CONF"
 
 detect_environment() {
     if [[ -f /.dockerenv ]] || grep -q 'docker\|containerd' /proc/1/cgroup 2>/dev/null; then
@@ -37,6 +41,13 @@ build_container() {
 build_native() {
     echo "==> Building in native mode (makechrootpkg)"
     local chroot="/var/lib/archbuild/custom-aarch64"
+
+    if [[ ! -f "$REPO_CONF" ]]; then
+        echo "==> ERROR: pacman.conf not found at $REPO_CONF" >&2
+        exit 1
+    fi
+
+    sudo mkdir -p "$(dirname "$chroot")"
 
     if [[ ! -d "$chroot/root" ]]; then
         echo "==> Creating clean chroot..."

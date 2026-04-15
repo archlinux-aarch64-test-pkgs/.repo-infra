@@ -2,5 +2,6 @@
   "pkg-hello-world": "2208aa979638da1a89048cfc45cd783e4544856a",
   ".keyring": "c8490c4ccd428279f1b2d8c09ced1820bf888678",
   "pkg-qcom-fastrpc": "b6ecda3cc00d5e2527c7d6aa9132f75e66bd63e7",
-  "pkg-hexagon-dsp-binaries": "7c993b0e652cda52f0a9655d1eb40e970933e5b5"
+  "pkg-hexagon-dsp-binaries": "7c993b0e652cda52f0a9655d1eb40e970933e5b5",
+  "pkg-gstreamer-qti-oss": "d6de451e270c7e7a4fd633bfa4c5e075eaf699bc"
 }

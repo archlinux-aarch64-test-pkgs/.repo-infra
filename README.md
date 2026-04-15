@@ -13,7 +13,7 @@ This repo centralizes all CI/CD workflows, build scripts, and configuration. Ind
   detect-updates.yml    # Cron: scan pkg-xxx repos for new commits, trigger builds
   build-container.yml   # Build & push the aarch64 build environment image to GHCR
 scripts/
-  build.sh              # Build script (auto-detects container vs native chroot)
+  build.sh              # Build script (runs inside container, installs deps + makepkg)
   detect-updates.sh     # Update detection logic
   sign-package.sh       # GPG sign all .pkg.tar.zst in cwd
 config/
@@ -25,12 +25,14 @@ state/
 Containerfile           # aarch64 Arch Linux build environment image
 ```
 
-## Build Modes
+## Build Mode
 
-| Runner | Mode | Isolation |
-|--------|------|-----------|
-| `ubuntu-24.04-arm` (GitHub) | Container + `makepkg` | Docker (fresh each run) |
-| `self-hosted` (Arch Linux) | Native `makechrootpkg` | systemd-nspawn clean chroot |
+All runners use the same container image (`ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest`) + `makepkg`. The only difference is hardware resources.
+
+| Runner | Suitable For | Limitation |
+|--------|-------------|------------|
+| `ubuntu-24.04-arm` (GitHub) | Lightweight packages, `any` arch | GitHub Actions time/resource limits |
+| `self-hosted` (aarch64) | Large packages (long compile, high memory) | Requires Docker installed |
 
 ## Adding a New Package
 

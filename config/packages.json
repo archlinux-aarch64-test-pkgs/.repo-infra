@@ -48,6 +48,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qcom-adreno-opencl-bin",
+      "repo": "pkg-qcom-adreno-opencl-bin",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

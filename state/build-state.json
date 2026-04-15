@@ -4,5 +4,6 @@
   "pkg-qcom-fastrpc": "b6ecda3cc00d5e2527c7d6aa9132f75e66bd63e7",
   "pkg-hexagon-dsp-binaries": "7c993b0e652cda52f0a9655d1eb40e970933e5b5",
   "pkg-gstreamer-qti-oss": "d6de451e270c7e7a4fd633bfa4c5e075eaf699bc",
-  "pkg-qcom-fastcv-binaries": "8662fa9f119ac63b1dbc8d0b9f3bdf815842b5fc"
+  "pkg-qcom-fastcv-binaries": "8662fa9f119ac63b1dbc8d0b9f3bdf815842b5fc",
+  "pkg-opencv-fastcv": "8ea4ae40f20fcb1966fc7c83b92b860d002e5e24"
 }

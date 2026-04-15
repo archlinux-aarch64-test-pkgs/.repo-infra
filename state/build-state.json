@@ -1,4 +1,5 @@
 {
   "pkg-hello-world": "2208aa979638da1a89048cfc45cd783e4544856a",
-  ".keyring": "c8490c4ccd428279f1b2d8c09ced1820bf888678"
+  ".keyring": "c8490c4ccd428279f1b2d8c09ced1820bf888678",
+  "pkg-qcom-fastrpc": "250c4434d117e03a2a71a685d78a3f631df48d1c"
 }

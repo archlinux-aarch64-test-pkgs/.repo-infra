@@ -3,7 +3,16 @@
     {
       "name": "hello-world",
       "repo": "pkg-hello-world",
-      "arch": ["any"]
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "qcom-fastrpc",
+      "repo": "pkg-qcom-fastrpc",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

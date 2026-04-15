@@ -26,6 +26,11 @@ COPY config/pacman.conf /etc/pacman.conf
 COPY config/makepkg.conf /etc/makepkg.conf
 
 RUN pacman-key --init && \
+    curl -fsSL -o /tmp/drzee-repo.key \
+      https://arch-linux-repo.drzee.net/arch/extra/os/aarch64/public.key && \
+    pacman-key --add /tmp/drzee-repo.key && \
+    pacman-key --lsign-key key@drzee.net && \
+    rm /tmp/drzee-repo.key && \
     pacman -Syu --noconfirm base-devel git jq && \
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/*

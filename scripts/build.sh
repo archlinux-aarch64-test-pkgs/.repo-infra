@@ -11,6 +11,13 @@ echo "==> MAKEPKG_CONF=$MAKEPKG_CONF"
 
 cp "$REPO_CONF" /etc/pacman.conf
 cp "$MAKEPKG_CONF" /etc/makepkg.conf
+
+curl -fsSL -o /tmp/drzee-repo.key \
+  https://arch-linux-repo.drzee.net/arch/extra/os/aarch64/public.key
+pacman-key --add /tmp/drzee-repo.key
+pacman-key --lsign-key key@drzee.net
+rm /tmp/drzee-repo.key
+
 pacman -Syu --noconfirm --needed base-devel
 
 source PKGBUILD

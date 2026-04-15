@@ -8,8 +8,6 @@ on:
 jobs:
   detect:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout .repo-infra
         uses: actions/checkout@v4
@@ -18,13 +16,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
         run: bash scripts/detect-updates.sh
-
-      - name: Commit build state changes
-        run: |
-          if ! git diff --quiet state/build-state.json 2>/dev/null; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add state/build-state.json
-            git commit -m "chore: update build state"
-            git push
-          fi

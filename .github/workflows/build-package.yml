@@ -101,3 +101,23 @@ jobs:
           repository: ${{ env.ORG }}/.repo-db
           event-type: package-updated
           client-payload: '{"package": "${{ steps.pkg.outputs.repo }}", "version": "${{ steps.ver.outputs.tag }}"}'
+
+      - name: Update build state
+        env:
+          GH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
+        run: |
+          BUILT_SHA=$(git -C pkgbuild rev-parse HEAD)
+          REPO="${{ steps.pkg.outputs.repo }}"
+
+          resp=$(gh api "repos/$ORG/.repo-infra/contents/state/build-state.json" \
+            -H "Accept: application/vnd.github.v3+json")
+          file_sha=$(echo "$resp" | jq -r '.sha')
+          content=$(echo "$resp" | jq -r '.content' | base64 -d)
+
+          new_content=$(echo "$content" | jq --arg r "$REPO" --arg s "$BUILT_SHA" '.[$r] = $s')
+
+          gh api "repos/$ORG/.repo-infra/contents/state/build-state.json" \
+            -X PUT \
+            -f message="chore: update build state for $REPO" \
+            -f content="$(echo -n "$new_content" | base64 -w 0)" \
+            -f sha="$file_sha"

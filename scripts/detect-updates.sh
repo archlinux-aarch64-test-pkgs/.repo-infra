@@ -44,8 +44,6 @@ while read -r pkg; do
             -f package="$repo" \
             -f runner="$runner"
 
-        jq --arg r "$repo" --arg s "$latest_sha" '.[$r] = $s' "$STATE_FILE" > tmp_state.json \
-            && mv tmp_state.json "$STATE_FILE"
         ((triggered++)) || true
     else
         echo "  Up to date (${latest_sha:0:7}...)"

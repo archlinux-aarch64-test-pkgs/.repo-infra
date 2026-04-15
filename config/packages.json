@@ -13,6 +13,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "aarch64-addons-keyring",
+      "repo": ".keyring",
+      "arch": [
+        "any"
+      ]
     }
   ]
 }

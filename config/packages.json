@@ -1,3 +1,9 @@
 {
-  "packages": []
+  "packages": [
+    {
+      "name": "hello-world",
+      "repo": "pkg-hello-world",
+      "arch": ["any"]
+    }
+  ]
 }

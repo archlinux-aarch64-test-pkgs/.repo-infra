@@ -27,6 +27,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "gstreamer-qti-oss",
+      "repo": "pkg-gstreamer-qti-oss",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

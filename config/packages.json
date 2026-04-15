@@ -55,6 +55,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qcom-libdmabufheap",
+      "repo": "pkg-qcom-libdmabufheap",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

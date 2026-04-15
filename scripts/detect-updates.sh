@@ -23,7 +23,13 @@ jq -c '.packages[]' "$PACKAGES_FILE" | while read -r pkg; do
 
     echo "--- Checking $repo ($name) ---"
 
-    latest_sha=$(gh api "repos/$ORG/$repo/commits/main" --jq '.sha' 2>/dev/null || true)
+    default_branch=$(gh api "repos/$ORG/$repo" --jq '.default_branch' 2>/dev/null || true)
+    if [[ -z "$default_branch" ]]; then
+        echo "  WARNING: Could not determine default branch for $repo, skipping"
+        continue
+    fi
+
+    latest_sha=$(gh api "repos/$ORG/$repo/commits/$default_branch" --jq '.sha' 2>/dev/null || true)
     if [[ ! "$latest_sha" =~ ^[0-9a-f]{40}$ ]]; then
         echo "  WARNING: Could not fetch latest commit for $repo (got: '${latest_sha:0:60}'), skipping"
         continue

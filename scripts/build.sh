@@ -47,7 +47,7 @@ build_native() {
         exit 1
     fi
 
-    sudo mkdir -p "$(dirname "$chroot")"
+    sudo mkdir -p "$chroot"
 
     if [[ ! -d "$chroot/root" ]]; then
         echo "==> Creating clean chroot..."

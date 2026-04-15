@@ -20,6 +20,13 @@
       "arch": [
         "any"
       ]
+    },
+    {
+      "name": "hexagon-dsp-binaries",
+      "repo": "pkg-hexagon-dsp-binaries",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

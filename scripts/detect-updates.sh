@@ -23,9 +23,9 @@ jq -c '.packages[]' "$PACKAGES_FILE" | while read -r pkg; do
 
     echo "--- Checking $repo ($name) ---"
 
-    latest_sha=$(gh api "repos/$ORG/$repo/commits/main" --jq '.sha' 2>/dev/null || echo "")
-    if [[ -z "$latest_sha" ]]; then
-        echo "  WARNING: Could not fetch latest commit for $repo, skipping"
+    latest_sha=$(gh api "repos/$ORG/$repo/commits/main" --jq '.sha' 2>/dev/null || true)
+    if [[ ! "$latest_sha" =~ ^[0-9a-f]{40}$ ]]; then
+        echo "  WARNING: Could not fetch latest commit for $repo (got: '${latest_sha:0:60}'), skipping"
         continue
     fi
 

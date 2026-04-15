@@ -1,3 +1,5 @@
 {
-  "pkg-hello-world": "2208aa979638da1a89048cfc45cd783e4544856a"
+  "pkg-hello-world": "2208aa979638da1a89048cfc45cd783e4544856a",
+  "pkg-qcom-fastrpc": "{\"message\":\"No commit found for SHA: main\",\"documentation_url\":\"https://docs.github.com/rest/commits/commits#get-a-commit\",\"status\":\"422\"}",
+  ".keyring": "c8490c4ccd428279f1b2d8c09ced1820bf888678"
 }

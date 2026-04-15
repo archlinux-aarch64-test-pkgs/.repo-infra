@@ -16,7 +16,7 @@ fi
 triggered=0
 skipped=0
 
-jq -c '.packages[]' "$PACKAGES_FILE" | while read -r pkg; do
+while read -r pkg; do
     repo=$(echo "$pkg" | jq -r '.repo')
     name=$(echo "$pkg" | jq -r '.name')
     runner=$(echo "$pkg" | jq -r '.runner // "ubuntu-24.04-arm"')
@@ -51,7 +51,7 @@ jq -c '.packages[]' "$PACKAGES_FILE" | while read -r pkg; do
         echo "  Up to date (${latest_sha:0:7}...)"
         ((skipped++)) || true
     fi
-done
+done < <(jq -c '.packages[]' "$PACKAGES_FILE")
 
 echo ""
 echo "==> Done. Triggered: $triggered, Skipped: $skipped"

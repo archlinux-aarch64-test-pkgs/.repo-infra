@@ -106,6 +106,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.REPO_DISPATCH_TOKEN }}
         run: |
+          git config --global --add safe.directory "$(pwd)/pkgbuild"
           BUILT_SHA=$(git -C pkgbuild rev-parse HEAD)
           REPO="${{ steps.pkg.outputs.repo }}"
 

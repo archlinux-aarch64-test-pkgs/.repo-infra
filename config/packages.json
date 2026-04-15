@@ -41,6 +41,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "opencv-fastcv",
+      "repo": "pkg-opencv-fastcv",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

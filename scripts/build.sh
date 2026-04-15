@@ -21,21 +21,21 @@ detect_environment() {
 
 build_container() {
     echo "==> Building in container mode (makepkg)"
-    sudo cp "$REPO_CONF" /etc/pacman.conf
-    sudo cp "$MAKEPKG_CONF" /etc/makepkg.conf
-    sudo pacman -Syu --noconfirm --needed base-devel
+    cp "$REPO_CONF" /etc/pacman.conf
+    cp "$MAKEPKG_CONF" /etc/makepkg.conf
+    pacman -Syu --noconfirm --needed base-devel
 
-    # Install declared dependencies
     source PKGBUILD
     local -a all_deps=()
     [[ -n "${makedepends[*]:-}" ]] && all_deps+=("${makedepends[@]}")
     [[ -n "${depends[*]:-}" ]] && all_deps+=("${depends[@]}")
     [[ -n "${checkdepends[*]:-}" ]] && all_deps+=("${checkdepends[@]}")
     if (( ${#all_deps[@]} > 0 )); then
-        sudo pacman -S --noconfirm --needed "${all_deps[@]}" || true
+        pacman -S --noconfirm --needed "${all_deps[@]}" || true
     fi
 
-    makepkg -sf --noconfirm
+    chown -R builder:builder .
+    su builder -c "makepkg -sf --noconfirm"
 }
 
 build_native() {

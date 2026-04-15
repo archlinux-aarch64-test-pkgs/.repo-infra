@@ -36,6 +36,9 @@ jobs:
     timeout-minutes: 120
     permissions:
       contents: write
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout .repo-infra
         uses: actions/checkout@v4

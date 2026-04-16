@@ -47,8 +47,7 @@ while IFS= read -r repo; do
     arch='["aarch64"]'
     pkgbuild=$(echo "$pkgbuild_resp" | jq -r '.content' | base64 -d 2>/dev/null || true)
     if [[ -n "$pkgbuild" ]]; then
-        arch_block=$(echo "$pkgbuild" | sed -n "/^arch=(/,/)/p" | tr '\n' ' ')
-        arch_values=$(echo "$arch_block" | grep -oP '\(\K[^)]*' | tr -d "'" | tr -d '"' | xargs)
+        arch_values=$(echo "$pkgbuild" | grep -oP '^arch=\(\K[^)]+' | tr -d "'" | tr -d '"' | xargs)
         if [[ -n "$arch_values" ]]; then
             arch=$(echo "$arch_values" | tr ' ' '\n' | jq -R . | jq -sc .)
             echo "  Detected arch: $arch"

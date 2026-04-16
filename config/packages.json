@@ -69,6 +69,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qcom-smart-venc-ctrl-algo",
+      "repo": "pkg-qcom-smart-venc-ctrl-algo",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

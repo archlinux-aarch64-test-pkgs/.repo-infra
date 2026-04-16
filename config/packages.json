@@ -99,6 +99,18 @@
         "x86_64",
         "aarch64"
       ]
+    },
+    {
+      "name": "resize-rootfs",
+      "repo": "pkg-resize-rootfs",
+      "arch": [
+        "i686",
+        "x86_64",
+        "arm",
+        "armv6h",
+        "armv7h",
+        "aarch64"
+      ]
     }
   ]
 }

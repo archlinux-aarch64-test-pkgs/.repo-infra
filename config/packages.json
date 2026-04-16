@@ -91,6 +91,14 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "embloader",
+      "repo": "pkg-embloader",
+      "arch": [
+        "x86_64",
+        "aarch64"
+      ]
     }
   ]
 }

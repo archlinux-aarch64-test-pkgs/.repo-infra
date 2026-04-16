@@ -84,6 +84,13 @@
         "aarch64",
         "x86_64"
       ]
+    },
+    {
+      "name": "qcom-diag-router-bin",
+      "repo": "pkg-qcom-diag-router-bin",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

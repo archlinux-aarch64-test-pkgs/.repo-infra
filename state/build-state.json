@@ -10,5 +10,6 @@
   "pkg-qcom-adreno-opencl-bin": "117f6a15a92bce9920ee701d90134acc82474651",
   "pkg-qcom-qairt": "8c70843690333d5174037f1672502183da5591f3",
   "pkg-qcom-smart-venc-ctrl-algo": "5e5950dc0ebf21f7d1fe727a7ca197fce9626c23",
-  "pkg-qrtr": "e05e6adb8f56c010e212a68e76e02c736a896090"
+  "pkg-qrtr": "e05e6adb8f56c010e212a68e76e02c736a896090",
+  "pkg-qcom-diag-router-bin": "1c64e00ce52a90b893a27201111401739dcd690a"
 }

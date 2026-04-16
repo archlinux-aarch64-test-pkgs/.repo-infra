@@ -8,5 +8,6 @@
   "pkg-opencv-fastcv": "8ea4ae40f20fcb1966fc7c83b92b860d002e5e24",
   "pkg-qcom-libdmabufheap": "d1967381014cb56b54b70af73df667a7e78717d1",
   "pkg-qcom-adreno-opencl-bin": "117f6a15a92bce9920ee701d90134acc82474651",
-  "pkg-qcom-qairt": "8c70843690333d5174037f1672502183da5591f3"
+  "pkg-qcom-qairt": "8c70843690333d5174037f1672502183da5591f3",
+  "pkg-qcom-smart-venc-ctrl-algo": "5e5950dc0ebf21f7d1fe727a7ca197fce9626c23"
 }

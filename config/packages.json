@@ -76,6 +76,14 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "qrtr",
+      "repo": "pkg-qrtr",
+      "arch": [
+        "aarch64",
+        "x86_64"
+      ]
     }
   ]
 }

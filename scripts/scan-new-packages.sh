@@ -6,7 +6,7 @@ PACKAGES_FILE="config/packages.json"
 
 echo "==> Fetching all pkg-* repos from org $ORG ..."
 all_repos=$(gh api --paginate "orgs/$ORG/repos?per_page=100" \
-    --jq '.[] | select(.archived == false) | .name' | grep '^pkg-' | sort)
+    --jq '.[] | select(.archived == false) | .name' | grep '^pkg-' | sort || true)
 
 if [[ -z "$all_repos" ]]; then
     echo "No pkg-* repos found in $ORG"
@@ -31,6 +31,49 @@ echo ""
 added=0
 skipped=0
 
+extract_arch() {
+    awk '
+        function strip_comments(s, out, i, c, q, prev) {
+            out = ""
+            q = ""
+            for (i = 1; i <= length(s); i++) {
+                c = substr(s, i, 1)
+                prev = i > 1 ? substr(s, i - 1, 1) : ""
+                if (q == "") {
+                    if (c == "#") break
+                    if (c == "\047" || c == "\"") q = c
+                } else if (c == q && prev != "\\") {
+                    q = ""
+                }
+                out = out c
+            }
+            return out
+        }
+
+        /^[[:space:]]*arch[[:space:]]*=/ {
+            in_arch = 1
+            line = $0
+            sub(/^[[:space:]]*arch[[:space:]]*=[[:space:]]*\(/, "", line)
+        }
+
+        in_arch {
+            done = 0
+            line = strip_comments(line)
+            if (line ~ /\)/) {
+                sub(/\).*/, "", line)
+                done = 1
+            }
+            gsub(/[()]/, " ", line)
+            gsub(/["\047]/, "", line)
+            for (i = 1; i <= split(line, values, /[[:space:]]+/); i++) {
+                if (values[i] != "") print values[i]
+            }
+            if (done) exit
+            line = ""
+        }
+    '
+}
+
 while IFS= read -r repo; do
     [[ -z "$repo" ]] && continue
     name="${repo#pkg-}"
@@ -47,7 +90,7 @@ while IFS= read -r repo; do
     arch='["aarch64"]'
     pkgbuild=$(echo "$pkgbuild_resp" | jq -r '.content' | base64 -d 2>/dev/null || true)
     if [[ -n "$pkgbuild" ]]; then
-        arch_values=$(echo "$pkgbuild" | grep -oP '^arch=\(\K[^)]+' | tr -d "'" | tr -d '"' | xargs)
+        arch_values=$(echo "$pkgbuild" | extract_arch | xargs || true)
         if [[ -n "$arch_values" ]]; then
             arch=$(echo "$arch_values" | tr ' ' '\n' | jq -R . | jq -sc .)
             echo "  Detected arch: $arch"

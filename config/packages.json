@@ -111,6 +111,13 @@
         "armv7h",
         "aarch64"
       ]
+    },
+    {
+      "name": "kernel-dtbs-hook",
+      "repo": "pkg-kernel-dtbs-hook",
+      "arch": [
+        "any"
+      ]
     }
   ]
 }

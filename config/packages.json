@@ -118,6 +118,13 @@
       "arch": [
         "any"
       ]
+    },
+    {
+      "name": "linux-radxa-qcom",
+      "repo": "pkg-linux-radxa-qcom",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

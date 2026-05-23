@@ -13,5 +13,6 @@
   "pkg-qrtr": "e05e6adb8f56c010e212a68e76e02c736a896090",
   "pkg-qcom-diag-router-bin": "1c64e00ce52a90b893a27201111401739dcd690a",
   "pkg-embloader": "6b1586950f3c938a5affc8afff30ccf9a8ac9fae",
-  "pkg-resize-rootfs": "a1f1e7a2590edc9e8206e9f275a8750960c202ae"
+  "pkg-resize-rootfs": "a1f1e7a2590edc9e8206e9f275a8750960c202ae",
+  "pkg-kernel-dtbs-hook": "3840e6dbf3f208f8e7db68fa6fbd8786e488e050"
 }

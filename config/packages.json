@@ -132,6 +132,13 @@
       "arch": [
         "any"
       ]
+    },
+    {
+      "name": "linux-firmware-radxa-sc8280xp",
+      "repo": "pkg-linux-firmware-radxa-sc8280xp",
+      "arch": [
+        "any"
+      ]
     }
   ]
 }

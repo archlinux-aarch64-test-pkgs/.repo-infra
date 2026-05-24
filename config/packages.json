@@ -125,6 +125,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "alsa-ucm-conf-radxa-qcom",
+      "repo": "pkg-alsa-ucm-conf-radxa-qcom",
+      "arch": [
+        "any"
+      ]
     }
   ]
 }

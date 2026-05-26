@@ -15,7 +15,7 @@
   "pkg-embloader": "6b1586950f3c938a5affc8afff30ccf9a8ac9fae",
   "pkg-resize-rootfs": "a1f1e7a2590edc9e8206e9f275a8750960c202ae",
   "pkg-kernel-dtbs-hook": "3840e6dbf3f208f8e7db68fa6fbd8786e488e050",
-  "pkg-linux-radxa-qcom": "8ad70a393b0ee1f57c41961451af6fca5dd50449",
+  "pkg-linux-radxa-qcom": "1c57e63de94e5492cb3a37781cb5d66622f1632c",
   "pkg-alsa-ucm-conf-radxa-qcom": "98d34178998d8bb5981ccd22e0e3b16781c0bcab",
   "pkg-linux-firmware-radxa-sc8280xp": "c134aa1b16568cd763e5ec0e8dace0f5db610e3b"
 }

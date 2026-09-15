@@ -21,5 +21,6 @@
   "pkg-python312": "bdc64ee7950fbcc2aa349d672e71a6f9ab9d44c5",
   "pkg-python312-numpy": "6b4899cf5af76c6ada4b45f5bb1fbbb16e849f97",
   "pkg-python312-pyyaml": "85c42da1b28c2bc347f9165e1e978b2565aff0a6",
-  "pkg-python312-typing-extensions": "7205f69b9c391ecb7dc810508b1a7fef881b10bb"
+  "pkg-python312-typing-extensions": "7205f69b9c391ecb7dc810508b1a7fef881b10bb",
+  "pkg-python312-protobuf": "833c488a657f200368290edd79b96ab57018760e"
 }

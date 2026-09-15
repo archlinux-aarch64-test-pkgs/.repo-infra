@@ -244,6 +244,13 @@
       "arch": [
         "any"
       ]
+    },
+    {
+      "name": "clvk-git",
+      "repo": "pkg-clvk-git",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

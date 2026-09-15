@@ -139,6 +139,20 @@
       "arch": [
         "any"
       ]
+    },
+    {
+      "name": "python312",
+      "repo": "pkg-python312",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-numpy",
+      "repo": "pkg-python312-numpy",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

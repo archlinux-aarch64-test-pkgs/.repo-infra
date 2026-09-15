@@ -1,11 +1,7 @@
-# Stage 1: Extract pre-downloaded aarch64 rootfs
+# Stage 1: Extract a verified aarch64 rootfs from the build context.
 #
-# Usage:
-#   1. Download rootfs to build context:
-#      curl -L -o rootfs.tar.zst \
-#        "https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64/archlinux-bootstrap-<DATE>-aarch64.tar.zst"
-#   2. Build:
-#      podman build -f Containerfile -t ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest .
+# CI downloads and verifies rootfs.tar.zst before invoking the image build. For
+# local builds, provide the same verified archive in the build context.
 
 FROM docker.io/arm64v8/ubuntu:24.04 AS extractor
 
@@ -31,11 +27,10 @@ RUN pacman-key --init && \
     pacman-key --add /tmp/drzee-repo.key && \
     pacman-key --lsign-key key@drzee.net && \
     rm /tmp/drzee-repo.key && \
-    pacman -Syu --noconfirm base-devel git jq && \
+    pacman -Syu --noconfirm --needed base-devel curl git gnupg jq && \
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/*
 
-RUN useradd -m builder && \
-    echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+RUN useradd -m builder
 
 CMD ["/bin/bash"]

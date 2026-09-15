@@ -1,6 +1,13 @@
 name: Build Container Image
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'Containerfile'
+      - 'config/makepkg.conf'
+      - 'config/pacman.conf'
+      - '.github/workflows/build-container.yml'
   schedule:
     - cron: '0 0 * * 1'
   workflow_dispatch:
@@ -9,40 +16,114 @@ on:
         description: 'rootfs date (YYYY.MM.DD), leave empty to auto-detect'
         required: false
         type: string
-  # Uncomment after self-hosted runner is configured:
-  # push:
-  #   paths:
-  #     - 'Containerfile'
-  #     - 'config/pacman.conf'
-  #     - 'config/makepkg.conf'
+
+concurrency:
+  group: build-env-publish
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: archlinux-aarch64-test-pkgs/build-env
   ROOTFS_BASE_URL: https://arch-linux-repo.drzee.net/arch/tarballs/os/aarch64
+  ROOTFS_SIGNING_FINGERPRINT: 9B2C213B21883BB65CE2FB900CF25682E6BA0751
 
 jobs:
-  build-and-push:
-    runs-on: self-hosted
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
     permissions:
       contents: read
       packages: write
+    outputs:
+      candidate: ${{ steps.image.outputs.candidate }}
+      digest: ${{ steps.build.outputs.digest }}
+      repository: ${{ steps.image.outputs.repository }}
+      release_tag: ${{ steps.image.outputs.release_tag }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout .repo-infra
         uses: actions/checkout@v4
 
       - name: Determine rootfs date
         id: rootfs
+        env:
+          INPUT_ROOTFS_DATE: ${{ inputs.rootfs_date }}
         run: |
-          if [[ -n "${{ inputs.rootfs_date }}" ]]; then
-            DATE="${{ inputs.rootfs_date }}"
+          set -euo pipefail
+
+          if [[ -n "$INPUT_ROOTFS_DATE" ]]; then
+            date="$INPUT_ROOTFS_DATE"
           else
-            DATE=$(curl -sL "$ROOTFS_BASE_URL/" | \
-              grep -oP 'archlinux-bootstrap-\K[0-9]{4}\.[0-9]{2}\.[0-9]{2}' | \
-              sort -V | tail -1)
+            index="$(curl --fail --show-error --location --retry 3 "$ROOTFS_BASE_URL/")"
+            archive="$({
+              printf '%s\n' "$index" |
+                grep -oE 'archlinux-bootstrap-[0-9]{4}\.[0-9]{2}\.[0-9]{2}-aarch64\.tar\.zst' |
+                sort -Vu |
+                tail -n 1
+            } || true)"
+            date="${archive#archlinux-bootstrap-}"
+            date="${date%-aarch64.tar.zst}"
           fi
-          echo "date=$DATE" >> "$GITHUB_OUTPUT"
-          echo "::notice::Using rootfs date: $DATE"
+
+          if [[ ! "$date" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}$ ]]; then
+            echo "::error::Could not determine a valid rootfs date: '$date'"
+            exit 1
+          fi
+
+          url="$ROOTFS_BASE_URL/archlinux-bootstrap-${date}-aarch64.tar.zst"
+          {
+            echo "date=$date"
+            echo "url=$url"
+          } >> "$GITHUB_OUTPUT"
+          echo "::notice::Using rootfs date: $date"
+
+      - name: Download and verify rootfs
+        env:
+          ROOTFS_URL: ${{ steps.rootfs.outputs.url }}
+        run: |
+          set -euo pipefail
+
+          curl --fail --show-error --location --retry 3 --retry-delay 5 \
+            --output rootfs.tar.zst "$ROOTFS_URL"
+          curl --fail --show-error --location --retry 3 --retry-delay 5 \
+            --output rootfs.tar.zst.sig "$ROOTFS_URL.sig"
+
+          keyring="$(mktemp -d)"
+          trap 'gpgconf --homedir "$keyring" --kill all 2>/dev/null || true; rm -rf "$keyring"' EXIT
+          curl --fail --show-error --location --retry 3 \
+            https://arch-linux-repo.drzee.net/arch/extra/os/aarch64/public.key |
+            gpg --homedir "$keyring" --batch --import
+
+          fingerprint="$(gpg --homedir "$keyring" --batch --with-colons --list-keys | \
+            awk -F: '$1 == "fpr" { print $10; exit }')"
+          if [[ "$fingerprint" != "$ROOTFS_SIGNING_FINGERPRINT" ]]; then
+            echo "::error::Unexpected rootfs signing key: $fingerprint"
+            exit 1
+          fi
+
+          gpg --homedir "$keyring" --batch --verify rootfs.tar.zst.sig rootfs.tar.zst
+          rm rootfs.tar.zst.sig
+
+      - name: Prepare candidate image tag
+        id: image
+        env:
+          ROOTFS_DATE: ${{ steps.rootfs.outputs.date }}
+        run: |
+          set -euo pipefail
+
+          repository="$REGISTRY/$IMAGE_NAME"
+          candidate="$repository:candidate-${GITHUB_SHA}-${ROOTFS_DATE}-${GITHUB_RUN_ID}"
+          release_tag="build-${ROOTFS_DATE}-${GITHUB_RUN_ID}"
+          {
+            echo "repository=$repository"
+            echo "candidate=$candidate"
+            echo "release_tag=$release_tag"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -51,14 +132,88 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push candidate image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Containerfile
+          platforms: linux/arm64
           push: true
-          build-args: |
-            ROOTFS_DATE=${{ steps.rootfs.outputs.date }}
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ steps.image.outputs.candidate }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.image.outputs.release_tag }}
+
+  verify:
+    needs: build
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ${{ needs.build.outputs.candidate }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout .repo-infra
+        uses: actions/checkout@v4
+
+      - name: Verify package build toolchain
+        run: |
+          set -euo pipefail
+          pacman -Q base-devel curl git gnupg jq
+          id builder
+          makepkg --version
+          test -f /etc/makepkg.conf
+          test -f /etc/pacman.conf
+
+      - name: Checkout smoke-test package
+        uses: actions/checkout@v4
+        with:
+          repository: archlinux-aarch64-test-pkgs/pkg-hello-world
+          path: pkgbuild
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
+      - name: Build smoke-test package
+        working-directory: pkgbuild
+        run: bash ../scripts/build.sh
+
+  promote:
+    needs: [build, verify]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Promote verified image
+        env:
+          REPOSITORY: ${{ needs.build.outputs.repository }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+          RELEASE_TAG: ${{ needs.build.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          docker buildx imagetools create \
+            --tag "$REPOSITORY:latest" \
+            --tag "$REPOSITORY:$RELEASE_TAG" \
+            "$REPOSITORY@$DIGEST"

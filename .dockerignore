@@ -1,0 +1,6 @@
+.git
+.github
+README.md
+scripts
+state
+rootfs.tar.zst.sig

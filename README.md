@@ -27,12 +27,14 @@ Containerfile           # aarch64 Arch Linux build environment image
 
 ## Build Mode
 
-All runners use the same container image (`ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest`) + `makepkg`. The only difference is hardware resources.
+All package runners use the same verified container image (`ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest`) + `makepkg`. The container workflow first publishes a uniquely tagged candidate, builds a smoke-test package in that candidate, then promotes its digest to `latest`. Package builds do not run a system upgrade, so the image remains their reproducible base environment.
 
 | Runner | Suitable For | Limitation |
 |--------|-------------|------------|
 | `ubuntu-24.04-arm` (GitHub) | Lightweight packages, `any` arch | GitHub Actions time/resource limits |
 | `self-hosted` (aarch64) | Large packages (long compile, high memory) | Requires Docker installed |
+
+The image build itself runs on the native `ubuntu-24.04-arm` runner because it needs Docker Buildx to create the image. Its verification job runs inside the candidate image, matching package build execution.
 
 ## Adding a New Package
 

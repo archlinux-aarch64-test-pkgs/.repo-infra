@@ -27,7 +27,6 @@ on:
 env:
   ORG: archlinux-aarch64-test-pkgs
   REPO_NAME: aarch64-addons
-  BUILD_IMAGE: ghcr.io/archlinux-aarch64-test-pkgs/build-env:latest
 
 jobs:
   build:

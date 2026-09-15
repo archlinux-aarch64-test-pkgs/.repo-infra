@@ -29,5 +29,6 @@
   "pkg-python312-dateutil": "7097681e85ac6dedb84bddf664dabc4d70b4bb18",
   "pkg-python312-ml-dtypes": "d8b7ce847821152204d25c952fb77853d8531d33",
   "pkg-python312-pydantic-core": "d6e0ecf35b7d651b23a35e87a2da96a7ad78a47f",
-  "pkg-python312-typing-inspection": "4706e42b1d1058add20a50bc0479983c22695f1d"
+  "pkg-python312-typing-inspection": "4706e42b1d1058add20a50bc0479983c22695f1d",
+  "pkg-python312-pandas": "5f3a438115b97a3ac046568674811111f50c1aa0"
 }

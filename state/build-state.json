@@ -17,5 +17,5 @@
   "pkg-kernel-dtbs-hook": "3840e6dbf3f208f8e7db68fa6fbd8786e488e050",
   "pkg-linux-radxa-qcom": "35240c5b26011527d03e9f836d8a73ba0f0d3005",
   "pkg-alsa-ucm-conf-radxa-qcom": "98d34178998d8bb5981ccd22e0e3b16781c0bcab",
-  "pkg-linux-firmware-radxa-sc8280xp": "c134aa1b16568cd763e5ec0e8dace0f5db610e3b"
+  "pkg-linux-firmware-radxa-sc8280xp": "8161f2d983940c9cbdc7e428bbf5995ca8cbb3b5"
 }

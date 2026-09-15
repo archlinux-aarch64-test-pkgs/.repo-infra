@@ -153,6 +153,97 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "python312-pyyaml",
+      "repo": "pkg-python312-pyyaml",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-typing-extensions",
+      "repo": "pkg-python312-typing-extensions",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-protobuf",
+      "repo": "pkg-python312-protobuf",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-ml-dtypes",
+      "repo": "pkg-python312-ml-dtypes",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-onnx",
+      "repo": "pkg-python312-onnx",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-six",
+      "repo": "pkg-python312-six",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-dateutil",
+      "repo": "pkg-python312-dateutil",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-pandas",
+      "repo": "pkg-python312-pandas",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-annotated-types",
+      "repo": "pkg-python312-annotated-types",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-pydantic-core",
+      "repo": "pkg-python312-pydantic-core",
+      "arch": [
+        "aarch64"
+      ]
+    },
+    {
+      "name": "python312-typing-inspection",
+      "repo": "pkg-python312-typing-inspection",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-pydantic",
+      "repo": "pkg-python312-pydantic",
+      "arch": [
+        "any"
+      ]
+    },
+    {
+      "name": "python312-aenum",
+      "repo": "pkg-python312-aenum",
+      "arch": [
+        "any"
+      ]
     }
   ]
 }

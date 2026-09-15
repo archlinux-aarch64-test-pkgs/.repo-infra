@@ -16,6 +16,9 @@ mapfile -t all_deps < <(
 )
 
 if (( ${#all_deps[@]} > 0 )); then
+    # Keep the container's installed base immutable while refreshing repository
+    # metadata so newly published internal dependencies can be resolved.
+    pacman -Sy --noconfirm
     pacman -S --noconfirm --needed "${all_deps[@]}"
 fi
 

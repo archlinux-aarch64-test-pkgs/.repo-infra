@@ -24,5 +24,6 @@
   "pkg-python312-typing-extensions": "7205f69b9c391ecb7dc810508b1a7fef881b10bb",
   "pkg-python312-protobuf": "833c488a657f200368290edd79b96ab57018760e",
   "pkg-python312-six": "d38ccab42f82d1187ca134df87329e5af8918e9b",
-  "pkg-python312-annotated-types": "a886aa0399a58ce493a412bdd8514e3d9f961da7"
+  "pkg-python312-annotated-types": "a886aa0399a58ce493a412bdd8514e3d9f961da7",
+  "pkg-python312-aenum": "f1cea8d2beee9479fa842eab7079197b8aaed1b5"
 }

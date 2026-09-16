@@ -33,5 +33,6 @@
   "pkg-python312-pandas": "5f3a438115b97a3ac046568674811111f50c1aa0",
   "pkg-python312-pydantic": "5c04818af428b2eec1edacd19c9dfab44bac3e15",
   "pkg-python312-onnx": "0ce3e4203eb97aed9aeb707386c71ae58c74c5a2",
-  "pkg-clvk-git": "c3d5c08aeb5a376bf74ed68f41c20d70156a15b5"
+  "pkg-clvk-git": "c3d5c08aeb5a376bf74ed68f41c20d70156a15b5",
+  "pkg-libva-v4l2": "cffaec719ea6e7268038622ad951b410a612666f"
 }

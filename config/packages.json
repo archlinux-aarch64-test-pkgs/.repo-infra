@@ -251,6 +251,13 @@
       "arch": [
         "aarch64"
       ]
+    },
+    {
+      "name": "libva-v4l2",
+      "repo": "pkg-libva-v4l2",
+      "arch": [
+        "aarch64"
+      ]
     }
   ]
 }

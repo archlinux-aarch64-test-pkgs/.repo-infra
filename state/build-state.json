@@ -15,7 +15,7 @@
   "pkg-embloader": "8b7839f84b16dba21224941f64bce939c79aaa93",
   "pkg-resize-rootfs": "a1f1e7a2590edc9e8206e9f275a8750960c202ae",
   "pkg-kernel-dtbs-hook": "3840e6dbf3f208f8e7db68fa6fbd8786e488e050",
-  "pkg-linux-radxa-qcom": "a84969f922f5caa1e14366de72cc1fbf6333c4a7",
+  "pkg-linux-radxa-qcom": "a640204e68334c2b81f7f617ac87f6e1a7ce2da1",
   "pkg-alsa-ucm-conf-radxa-qcom": "b467ea117305c0e18ef12fcc8ba00e4224c5f038",
   "pkg-linux-firmware-radxa-sc8280xp": "8161f2d983940c9cbdc7e428bbf5995ca8cbb3b5",
   "pkg-python312": "bdc64ee7950fbcc2aa349d672e71a6f9ab9d44c5",

@@ -253,8 +253,8 @@
       ]
     },
     {
-      "name": "libva-v4l2",
-      "repo": "pkg-libva-v4l2",
+      "name": "qcom-va-driver",
+      "repo": "pkg-qcom-va-driver",
       "arch": [
         "aarch64"
       ]

@@ -19,7 +19,15 @@ if (( ${#all_deps[@]} > 0 )); then
     # Keep the container's installed base immutable while refreshing repository
     # metadata so newly published internal dependencies can be resolved.
     pacman -Sy --noconfirm
-    pacman -S --noconfirm --needed "${all_deps[@]}"
+
+    # Only install dependencies that are not already satisfied. Passing
+    # installed packages to `pacman -S --needed` would still upgrade them when
+    # the repository is newer than the container, which can break packages
+    # pinned to an exact version (e.g. gcc requires gcc-libs=<same version>).
+    mapfile -t missing_deps < <(pacman -T "${all_deps[@]}" || true)
+    if (( ${#missing_deps[@]} > 0 )); then
+        pacman -S --noconfirm --needed "${missing_deps[@]}"
+    fi
 fi
 
 su builder -c "makepkg -sf --noconfirm"
